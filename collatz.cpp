@@ -1,8 +1,4 @@
-#include <chrono>
-#include <future>
 #include <iostream>
-
-const std::string DELIMITER = "->";
 
 bool is_even(unsigned long input) {
     bool is_even;
@@ -14,31 +10,43 @@ bool is_even(unsigned long input) {
     return is_even;
 }
 
+unsigned long even_collatz_operation(unsigned long input) {
+    unsigned long output = input / 2;
+    return output;
+}
+
+unsigned long odd_collatz_operation(unsigned long input) {
+    unsigned long output = (input * 3) + 1;
+    return output;
+}
+
 unsigned long collatz_iteration(unsigned long input) {
     unsigned long output;
     if (is_even(input)) {
-        output = input / 2;
+        output = even_collatz_operation(input);
     } else {
-        output = (input * 3) + 1;
+        output = odd_collatz_operation(input);
     }
     return output;
 }
 
-void print_orbit(unsigned long start) {
-    std::cout << start;
+std::vector<unsigned long> get_orbit(unsigned long start) {
+    std::vector<unsigned long> orbit;
+    orbit.push_back(start);
     unsigned long current = start;
     while (current != 1) {
         current = collatz_iteration(current);
-        std::cout << DELIMITER << current;
+        orbit.push_back(current);
     }
-    std::cout << std::endl;
+    return orbit;
 }
 
 int main() {
     unsigned long current_start = 1;
     while (true) {
-        print_orbit(current_start);
+        std::vector<unsigned long> orbit = get_orbit(current_start);
+        size_t orbit_length = orbit.size();
+        std::cout << "Starting at " << current_start << ", length is " << orbit_length << std::endl;
         current_start++;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
